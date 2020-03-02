@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<project name="Ketai" default="createDocumentation" basedir=".">
+
+	<property name="src.dir" location="src" />
+	<property name="build.dir" location="bin" />
+	<property name="doc.dir" location="reference" />
+	<property name="lib.dir" location="libs" />
+	<property name="dist.dir" location="dist" />
+	<property environment="env"/>
+
+	<path id="build.classpath">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${env.ANDROID_SDK}/platforms/android-25" includes="**/*.jar" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete>
+		    <fileset dir="${doc.dir}" includes="**/*.html"/>
+		  </delete>
+	</target>
+
+	<target name="makedir">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${doc.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+	
+	<target name="compile" depends="clean, makedir">
+		<javac source="1.7" target="1.7" 
+		  srcdir="${src.dir}" destdir="${build.dir}" 
+		  encoding="UTF-8"
+		  classpathref="build.classpath" 
+		  includeantruntime="false"
+		  compiler="org.eclipse.jdt.core.JDTCompilerAdapter">
+          <compilerclasspath path="../processing/java/mode/org.eclipse.jdt.core.jar;
+                                   ../processing/java/mode/jdtCompilerAdapter.jar"/>
+		</javac>
+	</target>
+
+	<target name="buildLibrary" depends="compile" description="Create the library for distribution">
+		<jar destfile="${dist.dir}\library\ketai.jar" includes="**/*.class" basedir="${build.dir}" />
+	</target>
+
+	<target name="createDocumentation" description="Create the documentation to package with the library">
+		<javadoc sourcepath="${src.dir}" destdir="${doc.dir}" classpathref="build.classpath" />
+	</target>
+
+
+</project>

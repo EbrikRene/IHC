@@ -15,7 +15,7 @@ int x, y, px, py;
 void setup() {
   size(1440, 2560);
   oscP5 = new OscP5(this, 12001);
-  remoteLocation = new NetAddress("192.168.1.3", 12001); // 1
+  remoteLocation = new NetAddress("192.168.0.13", 12001); // 1
   background(78, 93, 75);
 }
 

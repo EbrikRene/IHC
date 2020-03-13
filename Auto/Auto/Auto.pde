@@ -28,9 +28,12 @@ String UIText;
 
 ArrayList<String> devices = new ArrayList<String>();
 boolean isWatching = false;
+NetAddress remoteLocation;
+
 
 void setup()
 {
+  initNetworkConnection();
   orientation(PORTRAIT);
   background(78, 93, 75);
   stroke(255);
@@ -38,6 +41,8 @@ void setup()
   textSize(60);
   vibe = new KetaiVibrate(this);
   file = new SoundFile(this, "sample.mp3");
+  file.amp(0.5);
+  file.loop();
   sensor = new KetaiSensor(this);
   sensor.start();
   sensor.list();

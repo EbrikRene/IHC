@@ -40,9 +40,7 @@ void setup()
   textAlign(CENTER, CENTER);
   textSize(60);
   vibe = new KetaiVibrate(this);
-  file = new SoundFile(this, "sample.mp3");
-  file.amp(0.5);
-  file.loop();
+  file = new SoundFile(this, "1.aif");
   sensor = new KetaiSensor(this);
   sensor.start();
   sensor.list();

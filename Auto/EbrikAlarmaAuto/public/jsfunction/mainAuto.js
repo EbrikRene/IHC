@@ -87,6 +87,8 @@ function cambiarImagen(valoraccelerometerx, valoraccelerometerz, valortouch, val
         if(valoraccelerometerx > 3 && valoraccelerometerz > 9){
             console.log("CHOQUE DEL AUTO");
             $("#imgChoque").siblings().fadeOut(1000);
+			var audio = document.getElementById("audioChoque");
+            audio.play()
             $("#imgChoque").fadeIn(1000);
             $("#texto").text("CHOQUE DEL AUTO");
         }
@@ -101,12 +103,16 @@ function cambiarImagen(valoraccelerometerx, valoraccelerometerz, valortouch, val
         else if (valorlatitud != -106.1433023 && valorlongitud != 28.6958111 && valoraltitud!=1534.0){
           console.log("ROBO");
 		  $("#imgRobo").siblings().fadeOut(1000);
+		  var audio = document.getElementById("audioRobo");
+          audio.play()
           $("#imgRobo").fadeIn(1000)
           $("#texto").text("ROBO");
         }
         else if (valorproximidad > 0){
           console.log("INTRUSO HUSMEANDO");
 		  $("#imgIntruso").siblings().fadeOut(1000);
+		  var audio = document.getElementById("audioIntruso");
+          audio.play()
           $("#imgIntruso").fadeIn(1000)
           $("#texto").text("INTRUSO HUSMEANDO");
         }

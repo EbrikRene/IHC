@@ -8,7 +8,7 @@ float accelerometerX, accelerometerY, accelerometerZ;
 float proximity;
 String touch;
 double longitude, latitude, altitude;
-String botonpanico="false";
+String emergencia="false";
 P5ireBase fire;
 
 void setup() {
@@ -25,8 +25,8 @@ void setup() {
 }
 
 void draw() {
-  background(78, 93, 75);
-  text("Remote Accelerometer Info: " + "\n" +
+  background(255, 0, 0);
+  text("Información Sensada: " + "\n" +
     "touch: "+ touch + "\n" +
     "x: "+ nfp(accelerometerX, 1, 3) + "\n" +
     "y: "+ nfp(accelerometerY, 1, 3) + "\n" +
@@ -36,21 +36,20 @@ void draw() {
     "altitude: "+ altitude + "\n" +
     "proximity: "+ proximity + "\n", width/2, height/2);
     
-//    println(botonpanico);
-//    if (fire.getValue("panico") != botonpanico){ 
- //       botonpanico = fire.getValue("panico"); 
- //       if (botonpanico == "true") {
- //         OscMessage myMessage = new OscMessage("panico");
-  //        myMessage.add(int(1));
-  //        oscP5.send(myMessage, remoteLocation);
- //       }
-  //      else {
-  //        OscMessage myMessage = new OscMessage("panico");
-  //        myMessage.add(int(0));
-   //       oscP5.send(myMessage, remoteLocation);
+    if (fire.getValue("emergencia") != emergencia){ 
+        emergencia = fire.getValue("emergencia"); 
+        if (emergencia == "true") {
+          OscMessage myMessage = new OscMessage("emergencia");
+          myMessage.add(int(1));
+          oscP5.send(myMessage, remoteLocation);
         }
- //     }
-//}
+    }
+     else {
+         OscMessage myMessage = new OscMessage("emergencia");
+         myMessage.add(int(0));
+         oscP5.send(myMessage, remoteLocation);
+        }
+     }
 
 void oscEvent(OscMessage theOscMessage) {
   if (theOscMessage.checkTypetag("fff"))                  
@@ -74,7 +73,7 @@ void oscEvent(OscMessage theOscMessage) {
     proximity =  theOscMessage.get(0).intValue();  
     fire.setValue("proximidad", str(proximity));
   }
-  if (theOscMessage.checkTypetag("ii"))   {
+  if (theOscMessage.checkTypetag("ddd"))   {
     longitude =  theOscMessage.get(0).doubleValue();  
     latitude =  theOscMessage.get(1).doubleValue();
     altitude =  theOscMessage.get(2).doubleValue();

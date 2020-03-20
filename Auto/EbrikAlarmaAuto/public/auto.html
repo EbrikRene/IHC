@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <!--Estilos para css llamando a el archivo en la carpeta -->
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/estilosSensores.css">
+        <link rel="stylesheet" href="css/estilos.css">
+        <link rel="stylesheet" href="css/estilosLeds.css">
+
+        <title>Alarma de auto</title>
+    </head>
+    <body>
+        <!--Inicio del menu-->
+        <div class="container">
+            <br>
+            <br>
+            <header>
+                <nav class="navbar navbar-inverse">
+                    <div class="conteiner-fluid">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-1">
+                                <span class="sr-only">Tester</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a href="index.html" class="navbar-brand" id="navbar-1">Tester</a>
+                        </div>
+                        <div class="colapse navbar-collapse" id="navbar-1">
+                            <ul class="nav navbar-nav">
+                                <li><a href="index.html"><span class="icon-feather"></span>  Inicio</a></li>
+                                <li><a href="leds.html"><span class="icon-light-bulb"></span>  Leds</a></li>
+                                <li><a href="sensores.html"><span class="icon-water"></span>  Sensores</a></li>
+                                <li class="active"><a href="auto.html"><span class="icon-phone"></span>  Auto</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+        </div>
+        <!--Final del menu-->
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <!--Inicio Sensores cuerpo-->
+        <div>
+            <img src="img/choque.jpg" class="bg" id="imgChoque" style="display:none">
+            <img src="img/carrook.jpg" class="bg" id="imgCarroOK" style="display:none">
+            <img src="img/vidrioroto.jfif" class="bg" id="imgVidrioRoto" style="display:none">
+            <img src="img/intruso.jpg" class="bg" id="imgIntruso" style="display:none">
+            <img src="img/robo.jpg" class="bg" id="imgRobo" style="display:none">
+			<audio src="audio/roto.mp3" id="audioVidrioRoto">
+        </div>
+
+        <!--Texto que se mostrara en la interfaz-->
+        <!-- <h1>Sensor Temperatura: <span id="temp"></span>° C</h1> -->
+		<center><h3><font color="red">Sensor touch: <span id="touch"></span></font></h3></center>
+        <center><h3><font color="red">Sensor de proximidad: <span id="proximidad"></span></font></h3></center>
+        <center><h3><font color="red">Acelerómetro X: <span id="acelerometrox"></span></font></h3></center>
+        <center><h3><font color="red">Acelerómetro Y: <span id="acelerometroy"></span></font></h3></center>
+        <center><h3><font color="red">Acelerómetro Z: <span id="acelerometroz"></span></font></h3></center>
+		<center><h3><font color="red">Longitud: <span id="longitud"></span></font></h3></center>
+		<center><h3><font color="red">Latitud: <span id="latitud"></span></font></h3></center>
+		<center><h3><font color="red">Altitud: <span id="altitud"></span></font></h3></center>
+        <h2><span id="texto"></span></h2>
+
+        <br>
+        <br>
+        <br>
+        <div class="container" align="center">
+            <div class="row" align="center">
+                <div class="col-md-3 col-md-offset-4" align="center">
+                    <div class="panel panel-primary" align="center">
+                        <center><div class="panel-heading" align="center">
+                            <h3><center>EMERGENCIA</center></h3>
+                        </div>
+                        <div class="panel-body" >
+                            <div class="onoffswitch" >
+                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="emergencia" />
+                                <label class="onoffswitch-label" for="emergencia" >
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div></center>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+
+        <!-- pie de pagina -->
+        <div class="container">
+        </div>
+
+
+        <!--Estilos para javaScript llamando a jquerty desde su pagina y a el archivo en la carpeta local -->
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--Iniciamos el servicio de firebase-->
+    <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+ var firebaseConfig = {
+    apiKey: "AIzaSyAWlkNohd4EBogH40FhJU1qZXkthpT7z0c",
+    authDomain: "ebrik-alarma-auto.firebaseapp.com",
+    databaseURL: "https://ebrik-alarma-auto.firebaseio.com",
+    projectId: "ebrik-alarma-auto",
+    storageBucket: "ebrik-alarma-auto.appspot.com",
+    messagingSenderId: "873292427760",
+    appId: "1:873292427760:web:96bd89192d5b6df2686d35",
+    measurementId: "G-HMQ4P2GRHY"
+  };
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+    </script>
+
+        <!--llamamos nuestra libreria personal de javaScript-->
+        <script src="jsfunction/mainAuto.js"></script>
+    </body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="charset=ISO-8859-1">
+    
+
+<title>Entwurf QR2</title>
+<script
+    src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"
+></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
+<link
+    rel="stylesheet"
+    href="https://openlayers.org/en/v5.3.0/css/ol.css"
+    type="text/css"
+>
+<!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+<script
+    src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"
+></script>
+
+<!--script
+    type="text/javascript"
+    src="MainSource.js"
+></script-->
+<link
+    rel="stylesheet"
+    href="MainStyle.css"
+>
+
+</head>
+<style>
+        #map {height: 100%;}
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #floating-panel {
+            position: absolute;
+            top: 10px;
+            right: 1%;
+            z-index: 5;
+            background-color: #fff;
+            border: 1px solid #999;
+            text-align: center;
+        }
+    </style>
+
+<body>
+    <div id="mapcontainer">
+        <div id='map'></div>
+    </div>
+
+    <div id="toolcontainer">
+        <div id="toolhead">
+            <img
+                src="Logo.jpg"
+                alt="Logo"
+                width="200px"
+                height="120px"
+            >
+        </div>
+        <div id="areas">
+        Routenliste:
+              <select id="areaSelector" size="3" name ="selectList">
+                
+              </select>
+            <input type ="submit" name = "delete" value ="Delete Route" onclick="removeOption()" >
+
+        </div>
+
+        <script type="text/javascript">
+
+    
+</script>
+
+
+        <div id='routepanel'
+            class="w3-panel w3-display-container">
+
+            <div class="subpanel">
+<br>
+<br>
+<br>
+            </div>
+        </div>
+ <input type="hidden" class = "rr"id="rr" value=""/>
+        <input type="hidden" id="sl" value=""/>
+        <input type="hidden"  id="el" value="">
+        <div id="editorcontainer">
+        <form id="member_data" action ="#" name="userInput">
+             
+            Startposition<input type="text" class = "dest"id="start1" value=""/></br><!-- Starting Location -->
+              
+            Endposition <input type="text" class ="dest" id="end1" value=""><!-- Ending Location -->
+            <input type = submit value="Add Route" onclick="pushData()">
+       </form>
+        </div>
+  <div id="floating-panel">
+    </div>
+    <div id="map"></div>
+
+   
+    </div>
+
+
+<script>
+    
+function removeOption(){
+        
+    console.log(routes);
+        console.log(waypts);
+
+    var select = document.getElementById("areaSelector");
+    console.log("string"+select.selectedIndex);
+    console.log("string"+select.value);
+    val = select.value;
+    arr = val.split("--");
+    console.log(arr[0]);
+    console.log(arr[1]);
+    var x = arr[0];
+    var y =arr[1];
+    select.remove(select.selectedIndex);
+    let location ={x,y};
+    console.log(location);
+    //waypts.pop(y);
+    //routes.pop()
+    console.log(routes);
+
+    var in1 = waypts.findIndex(t => t.location ===y && t.stopover == true);
+    console.log(in1);
+      if(in1 >= 0 ){
+      waypts.splice(in1,1);
+      console.log(waypts);
+      }
+      console.log(waypts)
+    var indx = routes.findIndex(st => st.startLocation ===x && st.endLocation ===y);
+    console.log(indx);
+       if(indx >= 0){
+        routes.splice(indx,1);
+        console.log(routes)
+      }
+      var t = waypts[waypts.length-1];
+      console.log(waypts[waypts.length-1]);
+      var h = t.location;
+        document.getElementById("sl").value=x;
+        document.getElementById("el").value=h;
+    rr = document.getElementById('rr');
+    ev = document.createEvent('Event');
+    ev.initEvent('change', true, false);
+    rr.dispatchEvent(ev);
+     
+
+    }
+
+
+
+     var routes = [];
+     var waypts = [];
+     function pushData(){
+     var startLocation = document.getElementById('start1').value;
+     var endLocation = document.getElementById('end1').value;
+     let locations={startLocation,endLocation}
+     
+     if(endLocation){
+     routes.push(locations);
+     }
+     console.log(routes);
+      // 9
+      
+     var element = document.getElementById("areaSelector");
+     //for (var i = 0; i < routes.length; i++) {
+      //  locations=routes[i];
+        var x = document.createElement('option');
+       
+        x.innerHTML = locations.startLocation+"--"+locations.endLocation;
+       if(endLocation){
+        element.appendChild(x);
+     } 
+     //waypts.push({location: endLocation, stopover: true});
+     //};
+    }
+
+
+     var list = document.getElementsByClassName("input");
+    var values = [];
+    for(var i = 0; i < list.length; ++i) {
+        values.push(parseFloat(list[i].value));
+    }
+
+    function calcDistance(p1, p2) {//p1 and p2 in the form of google.maps.LatLng object
+        return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000).toFixed(3);//distance in KiloMeters
+    }
+    
+    function getLocation() {
+        if (navigator.geolocation) {navigator.geolocation.getCurrentPosition(showPosition, showError);} 
+        else {alert("Geolocation is not supported by this browser.");}
+    }
+    function showPosition(position) {
+        alert("Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude); 
+    }
+    function showError(error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                alert("User denied the request for Geolocation.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                alert("Location information is unavailable.");
+                break;
+            case error.TIMEOUT:
+                alert("The request to get user location timed out.");
+                break;
+            case error.UNKNOWN_ERROR:
+                alert("An unknown error occurred.");
+                break;
+        }
+    }
+
+
+
+    function calculateAndDisplayRoute(directionsService, directionsDisplay, start, end) { 
+           
+            directionsService.route({
+                origin: start,
+                destination: end,
+                waypoints: waypts,
+                provideRouteAlternatives: true,
+                travelMode: 'DRIVING'
+            }, function(response, status) {
+                if (status === 'OK') {
+                    directionsDisplay.setDirections(response);
+                    var leg = response.routes[0].legs[0];
+                    /*// Move marker along path from A to B
+                    var markers = [];
+                    for(var i=0; i<leg.steps.length; i++){
+                        var marker = makeMarker(leg.steps[i].start_location);
+                        markers.push(marker);
+                        marker.setMap(null);
+                    }
+                    tracePath(markers, 0);
+                    */ //  
+                  //  var location = makeMarker(leg.steps[0].start_location);
+                   // continuouslyUpdatePosition(location);
+                         
+                } else {window.alert('Directions request failed due to ' + status);}
+            });
+        }
+    
+    function initMap() {
+        // var startLocation="Berlin";var endLocation="Munich"
+        //  let locations={startLocation,endLocation}
+        //  routes.push(locations);
+        // waypts.push({location: 'Munich', stopover: true});
+         
+       //   startLocation="Darmstadt, Germany";endLocation="Frankfurt, Germany"
+        // locations={startLocation,endLocation}
+        // routes.push(locations);
+        
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 5,
+            center: { lat: 28.6585922, lng: -106.0438785 }
+        });
+        
+       //origin to destination via waypoints
+        //waypts.push({location: 'indore', stopover: true});
+        //waypts=routes;
+        /*function continuouslyUpdatePosition(location){//Take current location from location.php and set marker to that location
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var pos = JSON.parse(this.responseText);
+                    location.setPosition(new google.maps.LatLng(pos.lat,pos.lng));
+                    setTimeout(function(){
+                        continuouslyUpdatePosition(location);
+                    },5000);
+                }
+            };
+            xhttp.open("GET", "location.php", true);
+            xhttp.send();
+        }
+*/
+        function othername() {
+        var input1 = document.getElementById("start1").value;
+        return input1;
+}       
+        function othername2(){
+            var input2 = document.getElementById("end1").value;
+            return input2;
+        }
+        
+        /* Distance between p1 & p2
+        var p1 = new google.maps.LatLng(45.463688, 9.18814);
+        var p2 = new google.maps.LatLng(46.0438317, 9.75936230000002);
+        alert(calcDistance(p1,p2)+" Kilimeters");
+        */
+        
+        //Make marker at any position in form of {lat,lng}
+        
+        var icons = {
+            end: new google.maps.MarkerImage('http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Push-Pin-1-Left-Pink-icon.png'),
+            start: new google.maps.MarkerImage('http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Push-Pin-1-Left-Chartreuse-icon.png')
+        };
+        
+        //Show suggestions for places, requires libraries=places in the google maps api script link
+        
+        
+        
+        var autocomplete1 = new google.maps.places.Autocomplete(document.getElementById('start1'));
+        var autocomplete2 = new google.maps.places.Autocomplete(document.getElementById('end1'));
+        
+        //var betweenpoints =[]
+
+        var directionsService1 = new google.maps.DirectionsService;
+        var directionsDisplay1 = new google.maps.DirectionsRenderer({
+            polylineOptions: {strokeColor: "red"}, //path color
+            //draggable: true,// change start, waypoints and destination by dragging
+            /* Start and end marker with same image
+            markerOptions : {icon: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Push-Pin-1-Left-Pink-icon.png'},
+            */
+            //suppressMarkers: true
+        });
+        
+         directionsDisplay1.setMap(map);
+        
+
+      //  for (var destinations =0 ; destinations<routes.length ; destinations++){
+        //    let location = routes[destinations]
+         //   console.log(location);
+        //document.getElementById("RootNode").onclick =
+
+
+        var onChangeHandler1 = function() {
+     var startLocation = document.getElementById('start1').value;
+     var endLocation = document.getElementById('end1').value;
+     if(startLocation){
+     if( endLocation ){
+      console.log("sl"+startLocation+"el"+endLocation+"--handler1"); 
+        waypts.push({location: endLocation, stopover: true});
+            calculateAndDisplayRoute(directionsService1, directionsDisplay1, startLocation,endLocation);
+        console.log(waypts);
+        }
+    };}
+        $('input.dest').change(onChangeHandler1);        
+           // onChangeHandler1();    
+        //}
+    var onChangeHandler2 = function() {
+     var startLocation = document.getElementById('sl').value;
+     var endLocation = document.getElementById('el').value;
+     console.log("sl"+startLocation+"el"+endLocation);
+     if(startLocation){
+     if( endLocation ){ 
+             calculateAndDisplayRoute(directionsService1, directionsDisplay1, startLocation,endLocation);
+        }
+    };}
+        $('input.rr').change(onChangeHandler2);        
+    
+
+        
+        
+
+        
+
+        function tracePath(markers, index){// move marker along path from A to B
+            if(index==markers.length)   return;
+            markers[index].setMap(map);
+            setTimeout(function(){
+                markers[index].setMap(null);
+                tracePath(markers, index+1);
+            },500);
+        }
+       //  for (var destinations =0 ; destinations<routes.length ; destinations++){
+        //    let location = routes[destinations]
+        //    console.log(location);
+                   for (var destinations =0 ; destinations<routes.length ; destinations++){
+            let pocation = routes[destinations]
+           // console.log(pocation.startLocation);
+        
+        calculateAndDisplayRoute(directionsService1, directionsDisplay1,pocation.startLocation,pocation.endLocation);
+    }
+
+    }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtXq_LAV-fmnifxchhJi-vBrYvvJVZIa8&callback=initMap&libraries=places,geometry"></script>
+
+
+</body>
+</html>

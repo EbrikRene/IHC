@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Map Routes Chihuahua">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="css/styles.css">
+	<link rel="shortcut icon" href="img/icono.ico" />
+	 <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <title>Map Routes Chihuahua</title>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div id="right-panel">
+      <div id="inner-panel">
+        <p class="walking"><i>Crea tu ruta óptima de manejo con:</i> <img src="img/MRChihuahua.png"></p>
+        <strong>Ruta Inicio:</strong>
+        <td><input type="text" id="start" size="10"></td>
+        <br>
+		<br>
+          <tr><td><strong>Dirección de parada:  (* Marcar en el mapa *)</strong></td><td><input type="text" id="ini" size="10"></td></tr>
+        <br>
+		<td><input type="hidden" id="lat" size="10"><td><input type="hidden" id="lng" size="10">
+		<br>
+        <strong>Lugares Interesantes</strong>
+        <br>
+        <ul id="waypoints">
+          <li>
+            <label for="catedral" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+              <input name="waypoints-check" id="catedral" class="mdl-switch__input" type="checkbox" value="Catedral Metropolitana de Chihuahua, Calle Guadalupe Victoria, Zona Centro, Chihuahua, Chih., México">
+              <span class="mdl-switch__label">Catedral Metropolitana de Chihuahua</span>
+            </label>
+          </li>
+          <li>
+            <label for="gameros" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+              <input name="waypoints-check" id="gameros" class="mdl-switch__input" type="checkbox" value="Centro Cultural Quinta Gameros, Avenida Paseo Bolívar, Zona Centro, Chihuahua, Chih., México">
+              <span class="mdl-switch__label">Centro Cultural Quinta Gameros</span>
+            </label>
+          </li>
+          <li>
+            <label for="museo" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+              <input name="waypoints-check" id="museo" class="mdl-switch__input" type="checkbox" value="Calle 20 de Noviembre 808, Santa Rosa, 31050 Chihuahua, Chih.">
+              <span class="mdl-switch__label">Museo de la Revolución</span>
+            </label>
+          </li>
+          <li>
+            <label for="uach" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+              <input name="waypoints-check" id="uach" class="mdl-switch__input" type="checkbox" value="Universidad Autónoma de Chihuahua, Avenida Pascual Orozco, Universidad, Chihuahua, Chih., México">
+              <span class="mdl-switch__label">Universidad Autónoma de Chihuahua</span>
+            </label>
+          </li>
+          <li>
+            <label for="rejon" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+              <input name="waypoints-check" id="rejon" class="mdl-switch__input" type="checkbox" value="Parque Metropolitano Tres Presas el Rejón, Avenida Prolongación Teófilo Borunda, Chihuahua, Chih., México">
+              <span class="mdl-switch__label">Parque Metropolitano Tres Presas el Rejón</span>
+            </label>
+          </li>
+          <li>
+            <label for="palacio" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+              <input name="waypoints-check" id="palacio" class="mdl-switch__input" type="checkbox" value="Palacio de Gobierno de Chihuahua, Calle Juan Aldama, Centro, Chihuahua, Chih., México">
+              <span class="mdl-switch__label">Palacio de Gobierno de Chihuahua</span>
+            </label>
+          </li>
+          <li>
+            <label for="grutas" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+              <input name="waypoints-check" id="grutas" class="mdl-switch__input" type="checkbox" value="Grutas Nombre de Dios, Chihuahua, Chih., México">
+              <span class="mdl-switch__label">Grutas Nombre de Dios</span>
+            </label>
+          </li>
+        </ul>
+        <br>
+        <b>Ruta Destino:</b>
+		<br>
+        <input type="text" class="destino" id="end" value="">
+      </div>
+      <div class="actions">
+        <button id="route" type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+          <i class="material-icons">location_on</i>
+          Ruta Óptima
+        </button>
+      </div>
+	  <div class="actions">
+        <button id="empty" type="submit" onclick="location.reload()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+          <i class="material-icons">location_off</i>
+          Eliminar Ruta
+        </button>
+      </div>
+      <div class="actions">
+        <button id="email" type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" disabled="disabled">
+          <i class="material-icons">email</i>
+          Correo
+        </button>
+        <button id="print" type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" disabled="disabled">
+          <i class="material-icons">print</i>
+          Imprimir
+        </button>
+      </div>
+      <div id="totals"></div>
+      <div id="directions-panel"></div>
+  </div>
+ 
+  <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtXq_LAV-fmnifxchhJi-vBrYvvJVZIa8&callback=start&libraries=places"></script>
+ <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="/__/firebase/7.14.2/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="/__/firebase/7.14.2/firebase-analytics.js"></script>
+
+<!-- Initialize Firebase -->
+<script src="/__/firebase/init.js"></script>
+  <!--Iniciamos el servicio de firebase-->
+    <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyANx9PJcl6Nfwe3IzU_D4zEsgC57BakZp4",
+    authDomain: "pong-ebrik.firebaseapp.com",
+    databaseURL: "https://pong-ebrik.firebaseio.com",
+    projectId: "pong-ebrik",
+    storageBucket: "pong-ebrik.appspot.com",
+    messagingSenderId: "715970871758",
+    appId: "1:715970871758:web:7f3e7380b62cf168766b9f",
+    measurementId: "G-HBZWS9ZWVH"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+
+ <script src="js/map-routes.js"></script>
+</body>
+</html>
